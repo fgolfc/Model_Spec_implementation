@@ -15,21 +15,20 @@ RSpec.describe Task, type: :model do
     end
 
     it "完了期限が未入力の場合、タスクのバリデーションが無効であること" do
-      task = Task.new(deadline: nil)
+      task = Task.new(title: "test", deadline: nil, description: "test", status: :todo)
       expect(task).to be_invalid
       expect(task.errors.full_messages).to eq ["Deadline can't be blank"]
     end
 
     it "完了期限が過去の日付の場合、タスクのバリデーションが無効であること" do
-      task = Task.new(deadline: Date.past)
+      task = Task.new(title: "test", deadline: Date.yesterday, description: "test", status: :todo)
       expect(task).to be_invalid
-      expect(task.errors.full_messages).to eq ["Deadline can't be in the past"]
+      expect(task.errors.full_messages).to eq ["Deadline must start from today."]
     end
 
     it "完了期限が今日の日付の場合、タスクのバリデーションが有効であること" do
-      task = Task.new(deadline: Date.today)
+      task = Task.new(title: "test", deadline: Date.today, description: "test", status: :todo)
       expect(task).to be_valid
-      expect(task.errors.full_messages).to eq ["Deadline can be today"]
     end
   end
 end
